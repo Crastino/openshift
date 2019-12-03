@@ -1,0 +1,24 @@
+.class
+
+# Package Files #
+*.jar
+*.war
+*.ear
+
+# ------------------------------------------------------------------------------------------- #
+# Eclipse-specific (https://github.com/github/gitignore/blob/master/Global/Eclipse.gitignore) #
+# ------------------------------------------------------------------------------------------- #
+
+.metadata
+bin/**
+tmp/**
+tmp/**/*
+*.tmp
+*.bak
+*.swp
+*~.nib
+./.settings/
+.loadpath
+# Recommended for Maven based projects 
+**/.project
+.classpath
