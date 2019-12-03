@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+    xmlns:cxf="http://camel.apache.org/schema/cxf"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="         http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd         http://camel.apache.org/schema/cxf http://camel.apache.org/schema/cxf/camel-cxf.xsd         http://camel.apache.org/schema/spring http://camel.apache.org/schema/spring/camel-spring.xsd">
+    <camelContext id="cxfrs-eef6d60b-6fe1-423e-895f-d2f5bb3d8f5c" xmlns="http://camel.apache.org/schema/spring">
+        <dataFormats>
+            <xmljson id="xmljson"/>
+        </dataFormats>
+        <!--         <restConfiguration bindingMode="auto" component="jetty" -->
+        <!--             host="localhost" port="8081"/> -->
+        <!--         <rest id="id-6280be0b-e637-4af8-98f1-17ff4648f13d" path="/jaxrs"> -->
+        <!--             <get id="id-43149242-c550-41c9-ad18-8e6a351d1800" -->
+        <!--                 outType="java.lang.String" type="java.lang.String" uri="/ping/{arg0}"> -->
+        <!--                 <to uri="direct:Ping"/> -->
+        <!--             </get> -->
+        <!--             <get id="id-e36fa4d6-0957-488e-bc7d-6010bc2ce911" -->
+        <!--                 outType="java.lang.String" type="java.lang.String" uri="/requestdata/{arg0}"> -->
+        <!--                 <to uri="direct:RequestData"/> -->
+        <!--             </get> -->
+        <!--         </rest> -->
+        <route id="Ping">
+            <from id="_from1" uri="direct:Ping"/>
+            <log id="_log1" loggingLevel="INFO" message="Ping"/>
+            <setBody id="_setBody1">
+                <simple>${header.arg0}</simple>
+            </setBody>
+            <unmarshal id="_unmarshal1">
+                <json library="Jackson" unmarshalTypeName="java.lang.String"/>
+            </unmarshal>
+            <to id="_to1" uri="cxf://http://localhost/RetalixCommGty/SOAP/OnlineMessagesService.asmx?serviceClass=org.tempuri.OnlineMessagesServiceSoap&amp;defaultOperationName=Ping"/>
+            <setHeader headerName="Content-Type" id="_setHeader1">
+                <constant>text/plain</constant>
+            </setHeader>
+            <setBody id="_setBody2">
+                <simple>${body}</simple>
+            </setBody>
+        </route>
+        <route id="RequestData">
+            <from id="_from2" uri="direct:RequestData"/>
+            <log id="_log2" loggingLevel="INFO" message="RequestData"/>
+            <setBody id="_setBody3">
+                <simple>${header.arg0}</simple>
+            </setBody>
+            <unmarshal id="_unmarshal2">
+                <json library="Jackson" unmarshalTypeName="java.lang.String"/>
+            </unmarshal>
+            <to id="_to2" uri="cxf://http://172.30.1.141/RetalixCommGty/SOAP/OnlineMessagesService.asmx?serviceClass=org.tempuri.OnlineMessagesServiceSoap&amp;defaultOperationName=RequestData"/>
+            <setHeader headerName="Content-Type" id="_setHeader2">
+                <constant>text/plain</constant>
+            </setHeader>
+            <setBody id="_setBody4">
+                <simple>${body}</simple>
+            </setBody>
+        </route>
+    </camelContext>
+</beans>

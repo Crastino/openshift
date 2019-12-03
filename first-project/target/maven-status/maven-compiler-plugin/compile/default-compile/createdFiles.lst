@@ -1,0 +1,9 @@
+org\tempuri\package-info.class
+org\tempuri\Ping.class
+org\tempuri\PingResponse.class
+org\tempuri\ObjectFactory.class
+org\tempuri\OnlineMessagesService.class
+org\tempuri\RequestData.class
+org\tempuri\RequestDataResponse.class
+org\tempuri\OnlineMessagesServiceSoap.class
+org\mycompany\Application.class

@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="        http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd        http://camel.apache.org/schema/spring       http://camel.apache.org/schema/spring/camel-spring.xsd">
+    <camelContext id="camel" xmlns="http://camel.apache.org/schema/spring">
+        <!--         <dataFormats> -->
+        <!--             <xmljson id="xmljson"/> -->
+        <!--         </dataFormats> -->
+        <dataFormats>
+            <json id="jsonUn" library="Jackson" unmarshalTypeName="org.tempuri.RequestData"/>
+        </dataFormats>
+        <restConfiguration bindingMode="json" component="jetty"
+            host="localhost" port="8099"/>
+        <rest id="id-6280be0b-e637-4af8-98f1-17ff4648f13d" path="/jaxrs">
+            <get id="id-get-ping" outType="java.lang.String"
+                type="java.lang.String" uri="/ping/{arg0}">
+                <to uri="direct:Ping"/>
+            </get>
+            <post id="id-post-ping" outType="java.lang.String"
+                type="java.lang.String" uri="/ping">
+                <to uri="direct:Ping"/>
+            </post>
+            <get id="id-get-requestdata" outType="java.lang.String"
+                type="java.lang.String" uri="/requestdata/{name}">
+                <to uri="direct:RequestData"/>
+            </get>
+            <post consumes="text/plain" id="id-post-requestdata"
+                produces="application/json" uri="/requestdata">
+                <to uri="direct:RequestData"/>
+            </post>
+        </rest>
+        <!--         <endpoint id="http1" uri="netty-http:http:localhost:8092/endpoint1"/> -->
+        <!--         <restConfiguration bindingMode="auto" component="jetty" -->
+        <!--             host="localhost" port="8095"/> -->
+        <!--         <rest id="rest-greetings" path="/greetings"> -->
+        <!--             <post id="greetings-post" uri="/post"> -->
+        <!--                 <to uri="direct:direct-service"/> -->
+        <!--             </post> -->
+        <!--             <get id="greetings-get" uri="/get/{name}"> -->
+        <!--                 <to uri="direct:direct-transform"/> -->
+        <!--             </get> -->
+        <!--         </rest> -->
+        <!--         <route id="simple-route"> -->
+        <!--                         <from id="route-timer" uri="timer://foo?period=5000"/> -->
+        <!--             <from id="_from1" uri="direct:direct-transform"/> -->
+        <!--             <transform id="transform1"> -->
+        <!--                 <simple>Hello ${header.name}</simple> -->
+        <!--             </transform> -->
+        <!--             <log id="route-log" message=">>> ${body}"/> -->
+        <!--             <to id="_to1" uri="http://localhost:8088/mockOnlineMessagesServiceSoap"/> -->
+        <!--         </route> -->
+        <!--         <route id="simple-route2"> -->
+        <!--             <from id="_from2" uri="ref:http1"/> -->
+        <!--                         <from id="_from2" uri="ref:http1"/> -->
+        <!--             <setBody id="route-setBody2"> -->
+        <!--                 <simple>Hello World 2 from camel-context.xml</simple> -->
+        <!--             </setBody> -->
+        <!--             <log id="route-log2" message=">>> ${body}"/> -->
+        <!--         </route> -->
+        <!--         <route id="simple-route3"> -->
+        <!--                         <from id="_from3" uri="file:C:\Users\ddambrosi\Desktop\fuse-folder"/> -->
+        <!--             <from id="_from3" uri="direct:direct-service"/> -->
+        <!--             <setBody id="route-setBody3"> -->
+        <!--                                 <simple>Hello World 3 from camel-context.xml</simple> -->
+        <!--                 <simple>${body}</simple> -->
+        <!--             </setBody> -->
+        <!--             <log id="route-log3" message=">>> ${body}"/> -->
+        <!--         </route> -->
+        <route id="Ping">
+            <from id="_from1" uri="direct:Ping"/>
+            <log id="_log1" loggingLevel="INFO" message="Ping"/>
+            <setBody id="_setBody1">
+                <simple>${header.arg0}</simple>
+            </setBody>
+            <log id="_log1" loggingLevel="INFO" message="${body}"/>
+            <unmarshal id="_unmarshal1">
+                <json library="Jackson" unmarshalTypeName="java.lang.String"/>
+            </unmarshal>
+            <to id="_to1" uri="cxf://http://172.30.1.141/RetalixCommGty/SOAP/OnlineMessagesService.asmx?serviceClass=org.tempuri.OnlineMessagesServiceSoap&amp;defaultOperationName=Ping"/>
+            <setHeader headerName="Content-Type" id="_setHeader1">
+                <constant>text/plain</constant>
+            </setHeader>
+            <setBody id="_setBody2">
+                <simple>${body}</simple>
+            </setBody>
+        </route>
+        <route id="RequestData">
+            <from id="_from2" uri="direct:RequestData"/>
+            <log id="_log2" loggingLevel="INFO" message="RequestData"/>
+            <!--             <setBody id="_setBody3"> -->
+            <!--                 <simple>${body}</simple> -->
+            <!--             </setBody> -->
+            <log id="RequestData-log3" message=">>> ${body}"/>
+            <setBody id="_setBody3">
+                <simple id="simple-body">{"messageHandlerApplication":"CustomerInquiry",
+            				"chain":"1",
+            				"branch": "1",
+            				"messageData": "message"
+            				}</simple>
+            </setBody>
+            <!-- 			<unmarshal ref="xmljson"/> -->
+            <!--             <unmarshal id="_unmarshal2"> -->
+            <!--                 <json library="Jackson" unmarshalTypeName="java.lang.String"/> -->
+            <!--             </unmarshal> -->
+<!--             <unmarshal id="_unmarshal2"> -->
+<!--                 <custom ref="jsonUn"/> -->
+<!--             </unmarshal> -->
+<!--             <log id="RequestData-log4" message=">>> ${body.messageHandlerApplication}"/> -->
+<!--             <to id="_to2" uri="cxf://http://172.30.1.141/RetalixCommGty/SOAP/OnlineMessagesService.asmx?serviceClass=org.tempuri.OnlineMessagesServiceSoap&amp;defaultOperationName=RequestData"/> -->
+<!--             <setHeader headerName="Content-Type" id="_setHeader2"> -->
+<!--                 <constant>text/plain</constant> -->
+<!--             </setHeader> -->
+<!--             <setBody id="_setBody4"> -->
+<!--                 <simple>${body}</simple> -->
+<!--             </setBody> -->
+        </route>
+    </camelContext>
+</beans>
